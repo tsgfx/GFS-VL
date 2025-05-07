@@ -43,8 +43,24 @@ If you find our work useful, please cite our work:
 @inproceedings{an2025generalized,
   title={Generalized Few-shot 3D Point Cloud Segmentation with Vision-Language Model},
   author={An, Zhaochong and Sun, Guolei and Liu, Yun and Li, Runjia and Han, Junlin and Konukoglu, Ender and Belongie, Serge},
-  booktitle=CVPR,
+  booktitle={CVPR},
   year={2025}
+}
+
+@inproceedings{an2024multimodality,
+    title={Multimodality Helps Few-Shot 3D Point Cloud Semantic Segmentation},
+    author={An, Zhaochong and Sun, Guolei and Liu, Yun and Li, Runjia and Wu, Min 
+            and Cheng, Ming-Ming and Konukoglu, Ender and Belongie, Serge},
+    booktitle={ICLR},
+    year={2025}
+}
+
+@inproceedings{an2024rethinking,
+  title={Rethinking Few-shot 3D Point Cloud Semantic Segmentation},
+  author={An, Zhaochong and Sun, Guolei and Liu, Yun and Liu, Fayao and Wu, Zongwei and Wang, Dan and Van Gool, Luc and Belongie, Serge},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages={3996--4006},
+  year={2024}
 }
 ```
 ---
