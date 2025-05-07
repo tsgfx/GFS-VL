@@ -39,7 +39,7 @@
 
 ## 📝 Citation
 If you find our work useful, please cite our work:
-```
+```bibtex
 @inproceedings{an2025generalized,
   title={Generalized Few-shot 3D Point Cloud Segmentation with Vision-Language Model},
   author={An, Zhaochong and Sun, Guolei and Liu, Yun and Li, Runjia and Han, Junlin and Konukoglu, Ender and Belongie, Serge},
