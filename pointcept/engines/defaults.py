@@ -63,7 +63,7 @@ def worker_init_fn(worker_id, num_workers, rank, seed):
 
 def default_argument_parser(epilog=None):
     parser = argparse.ArgumentParser(
-        epilog=epilog
+        epilog=epilog # 可选的描述或说明
         or f"""
     Examples:
     Run on single machine:
@@ -134,11 +134,11 @@ def default_config_parser(file_path, options):
 
 def default_setup(cfg):
     # scalar by world size
-    world_size = comm.get_world_size()
+    world_size = comm.get_world_size() # 节点数/GPU数
     cfg.num_worker = (
         cfg.num_worker if cfg.num_worker is not None else mp.cpu_count()
-    )
-    cfg.num_worker_per_gpu = cfg.num_worker // world_size
+    ) # 节点上的线程数，默认为CPU核心数
+    cfg.num_worker_per_gpu = cfg.num_worker // world_size # 每个GPU的工作线程数
     assert cfg.batch_size % world_size == 0
     assert cfg.batch_size_val is None or cfg.batch_size_val % world_size == 0
     assert cfg.batch_size_test is None or cfg.batch_size_test % world_size == 0
@@ -156,7 +156,7 @@ def default_setup(cfg):
     # update data loop
     assert cfg.epoch % cfg.eval_epoch == 0
     # settle random seed
-    rank = comm.get_rank()
+    rank = comm.get_rank() # 获取节点编号
     seed = (
         None if cfg.seed is None else cfg.seed * cfg.num_worker_per_gpu + rank
     )

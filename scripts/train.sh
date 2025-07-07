@@ -1,6 +1,7 @@
 #!/bin/sh
 set -x
 
+# 变量初始化
 PYTHON=python
 
 TRAIN_CODE=train.py
@@ -15,27 +16,35 @@ OPT=""
 
 while getopts "p:d:c:n:w:g:r:o:" opt; do
   case $opt in
+    # 指定解释器
     p)
       PYTHON=$OPTARG
       ;;
+    # 指定数据集
     d)
       DATASET=$OPTARG
       ;;
+    # 指定配置文件
     c)
       CONFIG=$OPTARG
       ;;
+    # 实验名称
     n)
       EXP_NAME=$OPTARG
       ;;
+    # 指定预训练权重
     w)
       WEIGHT=$OPTARG
       ;;
+    # 恢复训练的标志
     r)
       RESUME=$OPTARG
       ;;
+    # 使用的GPU数量
     g)
       GPU=$OPTARG
       ;;
+    # 附加选项
     o)
       OPT="$OPT $OPTARG"
       ;;
@@ -45,6 +54,7 @@ while getopts "p:d:c:n:w:g:r:o:" opt; do
   esac
 done
 
+# 检测GPU数量
 if [ "${NUM_GPU}" = 'None' ]
 then
   NUM_GPU=`$PYTHON -c 'import torch; print(torch.cuda.device_count())'`
