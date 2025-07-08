@@ -25,10 +25,9 @@ hooks = [
 ]
 evaluate = False  # not evaluate after each epoch training process
 vis = None  # visualization save path, set to None to disable visualization
-ps_thresh = 0.6  # threshold for Pseudo-label Selection
-ai_thresh = 0.9  # threshold for Adaptive Infilling
-nb_mix_blks = 3  # number of novel blocks to mix
-
+ps_thresh = 0.6  # threshold for Pseudo-label Selection 伪标签选择的阈值，伪标签与支持样本原型的余弦相似度低于该值的伪标签将被过滤掉。
+ai_thresh = 0.9  # threshold for Adaptive Infilling 自适应填充的阈值，表示在填充未标记区域时使用的相似度阈值。
+nb_mix_blks = 3  # number of novel blocks to mix 设置数据混合时新类别块的数量。该设置决定了每个训练样本中混合新类别的块数。
 weight = ""  # trained model weight or checkpoint
 vlm_3d_weight = (
     "./pretrain_weights/sparseunet32_636.pth"  # 3D VLM pretrained weight

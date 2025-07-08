@@ -2,14 +2,15 @@ from pointcept.datasets.preprocessing.scannet.meta_data.scannet200_constants imp
     CLASS20_LABELS_BASE,
 )
 
+# 基础配置文件
 _base_ = ["../_base_/default_runtime.py"]
 
 # misc custom setting
 batch_size = 12  # bs: total bs in all gpus
-num_worker = 15
-mix_prob = 0.8
-empty_cache = False
-enable_amp = True
+num_worker = 15 # 数据加载时的工作线程数
+mix_prob = 0.8 # 某种混合操作的概率，可能用于数据增强
+empty_cache = False # 是否在每次训练后清理内存缓存
+enable_amp = True # 是否启用自动混合精度
 
 # hook
 hooks = [
@@ -59,8 +60,11 @@ model = dict(
         pdnorm_affine=True,
         pdnorm_conditions=("ScanNet", "S3DIS", "Structured3D"),
     ),
+    # 损失函数
     criteria=[
+        # 交叉熵损失
         dict(type="CrossEntropyLoss", loss_weight=1.0, ignore_index=-1),
+        # Lovasz
         dict(
             type="LovaszLoss",
             mode="multiclass",
@@ -72,7 +76,9 @@ model = dict(
 
 # scheduler settings
 epoch = 800
+#  AdamW优化器，学习率为 0.006，权重衰减为 0.05
 optimizer = dict(type="AdamW", lr=0.006, weight_decay=0.05)
+# 调度器，OneCycleLR调度策略
 scheduler = dict(
     type="OneCycleLR",
     max_lr=[0.006, 0.0006],

@@ -1,0 +1,499 @@
+± |main U:1 ?:2 ✗| → sh scripts/train.sh -p python -d scannet200 -c semseg-pt-v3m1-0-gfsregistrain_k1 -n my_result -g 2
++ PYTHON=python
++ TRAIN_CODE=train.py
++ DATASET=scannet
++ CONFIG=None
++ EXP_NAME=debug
++ WEIGHT=None
++ RESUME=false
++ GPU=4
++ OPT=
++ getopts p:d:c:n:w:g:r:o: opt
++ PYTHON=python
++ getopts p:d:c:n:w:g:r:o: opt
++ DATASET=scannet200
++ getopts p:d:c:n:w:g:r:o: opt
++ CONFIG=semseg-pt-v3m1-0-gfsregistrain_k1
++ getopts p:d:c:n:w:g:r:o: opt
++ EXP_NAME=my_result
++ getopts p:d:c:n:w:g:r:o: opt
++ GPU=2
++ getopts p:d:c:n:w:g:r:o: opt
++ [  = None ]
++ echo Experiment name: my_result
+Experiment name: my_result
++ echo Python interpreter dir: python
+Python interpreter dir: python
++ echo Dataset: scannet200
+Dataset: scannet200
++ echo Config: semseg-pt-v3m1-0-gfsregistrain_k1
+Config: semseg-pt-v3m1-0-gfsregistrain_k1
++ echo GPU Num: 2
+GPU Num: 2
++ EXP_DIR=./exp/scannet200/my_result
++ MODEL_DIR=./exp/scannet200/my_result/model
++ CODE_DIR=./exp/scannet200/my_result/code
++ CONFIG_DIR=configs/scannet200/semseg-pt-v3m1-0-gfsregistrain_k1.py
++ echo  =========> CREATE EXP DIR <=========
+ =========> CREATE EXP DIR <=========
++ echo Experiment dir: ./exp/scannet200/my_result
+Experiment dir: ./exp/scannet200/my_result
++ false
++ mkdir -p ./exp/scannet200/my_result/model ./exp/scannet200/my_result/code
++ cp -r scripts tools pointcept ./exp/scannet200/my_result/code
++ echo Loading config in: configs/scannet200/semseg-pt-v3m1-0-gfsregistrain_k1.py
+Loading config in: configs/scannet200/semseg-pt-v3m1-0-gfsregistrain_k1.py
++ export PYTHONPATH=./exp/scannet200/my_result/code
++ echo ./exp/scannet200/my_result/code
+./exp/scannet200/my_result/code
++ echo Running code in: ./exp/scannet200/my_result/code
+Running code in: ./exp/scannet200/my_result/code
++ echo  =========> RUN TASK <=========
+ =========> RUN TASK <=========
++ [ None = None ]
++ python ./exp/scannet200/my_result/code/tools/train.py --config-file configs/scannet200/semseg-pt-v3m1-0-gfsregistrain_k1.py --num-gpus 2 --options save_path=./exp/scannet200/my_result
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[2025-07-08 23:12:58,351 INFO train.py line 145 1940757] => Loading config ...
+[2025-07-08 23:12:58,351 INFO train.py line 147 1940757] Save path: ./exp/scannet200/my_result
+[2025-07-08 23:12:58,795 INFO train.py line 148 1940757] Config:
+weight = ''
+resume = False
+evaluate = False
+test_only = False
+seed = 55672012
+save_path = './exp/scannet200/my_result'
+num_worker = 15
+batch_size = 12
+batch_size_val = None
+batch_size_test = None
+epoch = 20
+eval_epoch = 20
+sync_bn = False
+enable_amp = True
+empty_cache = False
+empty_cache_per_epoch = False
+find_unused_parameters = False
+mix_prob = 0
+param_dicts = [dict(keyword='backbone', lr=0.0001)]
+hooks = [
+    dict(type='BackboneLoader', strict=False),
+    dict(type='IterationTimer', warmup_iter=2),
+    dict(type='InformationWriter'),
+    dict(type='CheckpointSaver_MultiRegis', save_freq=None),
+    dict(type='GFS_MultiregTrain_PreciseEvaluator', test_last=True)
+]
+train = dict(type='GFS_VL_Trainer')
+test = dict(type='GFSSemSegTester', verbose=True)
+CLASS_LABELS_BASE_NOVEL = [
+    'floor', 'wall', 'door', 'chair', 'window', 'trash can', 'table',
+    'ceiling', 'doorframe', 'cabinet', 'object', 'shelf', 'desk', 'sink',
+    'picture', 'backpack', 'couch', 'box', 'pillow', 'bed', 'radiator',
+    'mirror', 'whiteboard', 'lamp', 'curtain', 'toilet', 'book', 'monitor',
+    'bookshelf', 'towel', 'tv', 'clothes', 'coffee table', 'office chair',
+    'nightstand', 'bag', 'dresser', 'toilet paper', 'recycling bin',
+    'kitchen cabinet', 'refrigerator', 'bathtub', 'telephone', 'plant',
+    'stool', 'keyboard', 'shoe', 'jacket', 'shower curtain', 'armchair',
+    'microwave', 'computer tower', 'bathroom vanity', 'kitchen counter',
+    'shower wall', 'paper towel dispenser', 'file cabinet'
+]
+CLASS_LABELS_BASE = ('refrigerator', 'desk', 'curtain', 'bookshelf', 'bed',
+                     'table', 'window', 'cabinet', 'door', 'chair', 'floor',
+                     'wall')
+vis = None
+ps_thresh = 0.6
+ai_thresh = 0.9
+nb_mix_blks = 3
+vlm_3d_weight = './models/3d_vlm_weight/sparseunet32_636.pth'
+backbone_weight = './models/backbone_weights/scannet200/model_best.pth'
+model = dict(
+    type='RegisTrainSegmentor',
+    num_base_classes=12,
+    num_novel_classes=45,
+    backbone_out_channels=64,
+    backbone=dict(
+        type='PT-v3m1',
+        in_channels=6,
+        order=['z', 'z-trans', 'hilbert', 'hilbert-trans'],
+        stride=(2, 2, 2, 2),
+        enc_depths=(2, 2, 2, 6, 2),
+        enc_channels=(32, 64, 128, 256, 512),
+        enc_num_head=(2, 4, 8, 16, 32),
+        enc_patch_size=(1024, 1024, 1024, 1024, 1024),
+        dec_depths=(2, 2, 2, 2),
+        dec_channels=(64, 64, 128, 256),
+        dec_num_head=(4, 4, 8, 16),
+        dec_patch_size=(1024, 1024, 1024, 1024),
+        mlp_ratio=4,
+        qkv_bias=True,
+        qk_scale=None,
+        attn_drop=0.0,
+        proj_drop=0.0,
+        drop_path=0.3,
+        shuffle_orders=True,
+        pre_norm=True,
+        enable_rpe=False,
+        enable_flash=True,
+        upcast_attention=False,
+        upcast_softmax=False,
+        cls_mode=False,
+        pdnorm_bn=False,
+        pdnorm_ln=False,
+        pdnorm_decouple=True,
+        pdnorm_adaptive=False,
+        pdnorm_affine=True,
+        pdnorm_conditions=('ScanNet', 'S3DIS', 'Structured3D')),
+    criteria=[dict(type='CrossEntropyLoss', loss_weight=1.0, ignore_index=-1)])
+optimizer = dict(type='Adam', lr=0.001)
+scheduler = dict(type='MultiStepLR', milestones=[50, 100], gamma=0.5)
+data_root = 'data/ScanNet200'
+k_shot = 1
+regis_train_list = ['regis1', 'regis2', 'regis3', 'regis4', 'regis5']
+data = dict(
+    num_bases=12,
+    num_base_novels=57,
+    ignore_index=-1,
+    names=[
+        'floor', 'wall', 'door', 'chair', 'window', 'trash can', 'table',
+        'ceiling', 'doorframe', 'cabinet', 'object', 'shelf', 'desk', 'sink',
+        'picture', 'backpack', 'couch', 'box', 'pillow', 'bed', 'radiator',
+        'mirror', 'whiteboard', 'lamp', 'curtain', 'toilet', 'book', 'monitor',
+        'bookshelf', 'towel', 'tv', 'clothes', 'coffee table', 'office chair',
+        'nightstand', 'bag', 'dresser', 'toilet paper', 'recycling bin',
+        'kitchen cabinet', 'refrigerator', 'bathtub', 'telephone', 'plant',
+        'stool', 'keyboard', 'shoe', 'jacket', 'shower curtain', 'armchair',
+        'microwave', 'computer tower', 'bathroom vanity', 'kitchen counter',
+        'shower wall', 'paper towel dispenser', 'file cabinet'
+    ],
+    train=dict(
+        type='ScanNet200Dataset_REGISTrain',
+        split='train',
+        data_root='data/ScanNet200',
+        transform=[
+            dict(type='CenterShift', apply_z=True),
+            dict(
+                type='RandomDropout',
+                dropout_ratio=0.2,
+                dropout_application_ratio=0.2),
+            dict(
+                type='RandomRotate',
+                angle=[-1, 1],
+                axis='z',
+                center=[0, 0, 0],
+                p=0.5),
+            dict(
+                type='RandomRotate',
+                angle=[-0.015625, 0.015625],
+                axis='x',
+                p=0.5),
+            dict(
+                type='RandomRotate',
+                angle=[-0.015625, 0.015625],
+                axis='y',
+                p=0.5),
+            dict(type='RandomScale', scale=[0.9, 1.1]),
+            dict(type='RandomFlip', p=0.5),
+            dict(type='RandomJitter', sigma=0.005, clip=0.02),
+            dict(
+                type='ElasticDistortion',
+                distortion_params=[[0.2, 0.4], [0.8, 1.6]]),
+            dict(type='ChromaticAutoContrast', p=0.2, blend_factor=None),
+            dict(type='ChromaticTranslation', p=0.95, ratio=0.05),
+            dict(type='ChromaticJitter', p=0.95, std=0.05),
+            dict(
+                type='GridSample',
+                grid_size=0.02,
+                hash_type='fnv',
+                mode='train',
+                return_grid_coord=True),
+            dict(type='SphereCrop', point_max=102400, mode='random'),
+            dict(type='CenterShift', apply_z=False),
+            dict(type='NormalizeColor'),
+            dict(type='ToTensor'),
+            dict(
+                type='Collect',
+                keys=('coord', 'grid_coord', 'segment', 'color', 'mask'),
+                feat_keys=('color', 'normal'))
+        ],
+        test_mode=False,
+        loop=1),
+    regis1=dict(
+        type='ScanNet200Dataset_REGIS',
+        split='train',
+        seed=10,
+        k_shot=1,
+        data_root='data/ScanNet200',
+        transform=[
+            dict(type='CenterShift', apply_z=True),
+            dict(
+                type='GridSample',
+                grid_size=0.02,
+                hash_type='fnv',
+                mode='train',
+                return_grid_coord=True),
+            dict(type='CenterShift', apply_z=False),
+            dict(type='NormalizeColor'),
+            dict(type='ToTensor'),
+            dict(
+                type='Collect',
+                keys=('coord', 'grid_coord', 'segment', 'color', 'name'),
+                feat_keys=('color', 'normal'))
+        ],
+        test_mode=False),
+    regis2=dict(
+        type='ScanNet200Dataset_REGIS',
+        split='train',
+        seed=20,
+        k_shot=1,
+        data_root='data/ScanNet200',
+        transform=[
+            dict(type='CenterShift', apply_z=True),
+            dict(
+                type='GridSample',
+                grid_size=0.02,
+                hash_type='fnv',
+                mode='train',
+                return_grid_coord=True),
+            dict(type='CenterShift', apply_z=False),
+            dict(type='NormalizeColor'),
+            dict(type='ToTensor'),
+            dict(
+                type='Collect',
+                keys=('coord', 'grid_coord', 'segment', 'color', 'name'),
+                feat_keys=('color', 'normal'))
+        ],
+        test_mode=False),
+    regis3=dict(
+        type='ScanNet200Dataset_REGIS',
+        split='train',
+        seed=30,
+        k_shot=1,
+        data_root='data/ScanNet200',
+        transform=[
+            dict(type='CenterShift', apply_z=True),
+            dict(
+                type='GridSample',
+                grid_size=0.02,
+                hash_type='fnv',
+                mode='train',
+                return_grid_coord=True),
+            dict(type='CenterShift', apply_z=False),
+            dict(type='NormalizeColor'),
+            dict(type='ToTensor'),
+            dict(
+                type='Collect',
+                keys=('coord', 'grid_coord', 'segment', 'color', 'name'),
+                feat_keys=('color', 'normal'))
+        ],
+        test_mode=False),
+    regis4=dict(
+        type='ScanNet200Dataset_REGIS',
+        split='train',
+        seed=40,
+        k_shot=1,
+        data_root='data/ScanNet200',
+        transform=[
+            dict(type='CenterShift', apply_z=True),
+            dict(
+                type='GridSample',
+                grid_size=0.02,
+                hash_type='fnv',
+                mode='train',
+                return_grid_coord=True),
+            dict(type='CenterShift', apply_z=False),
+            dict(type='NormalizeColor'),
+            dict(type='ToTensor'),
+            dict(
+                type='Collect',
+                keys=('coord', 'grid_coord', 'segment', 'color', 'name'),
+                feat_keys=('color', 'normal'))
+        ],
+        test_mode=False),
+    regis5=dict(
+        type='ScanNet200Dataset_REGIS',
+        split='train',
+        seed=50,
+        k_shot=1,
+        data_root='data/ScanNet200',
+        transform=[
+            dict(type='CenterShift', apply_z=True),
+            dict(
+                type='GridSample',
+                grid_size=0.02,
+                hash_type='fnv',
+                mode='train',
+                return_grid_coord=True),
+            dict(type='CenterShift', apply_z=False),
+            dict(type='NormalizeColor'),
+            dict(type='ToTensor'),
+            dict(
+                type='Collect',
+                keys=('coord', 'grid_coord', 'segment', 'color', 'name'),
+                feat_keys=('color', 'normal'))
+        ],
+        test_mode=False),
+    val=dict(
+        type='ScanNet200Dataset_TEST',
+        split='val',
+        data_root='data/ScanNet200',
+        transform=[
+            dict(type='CenterShift', apply_z=True),
+            dict(
+                type='GridSample',
+                grid_size=0.02,
+                hash_type='fnv',
+                mode='train',
+                return_grid_coord=True),
+            dict(type='CenterShift', apply_z=False),
+            dict(type='NormalizeColor'),
+            dict(type='ToTensor'),
+            dict(
+                type='Collect',
+                keys=('coord', 'grid_coord', 'segment', 'color'),
+                feat_keys=('color', 'normal'))
+        ],
+        test_mode=False),
+    test=dict(
+        type='ScanNet200Dataset_TEST',
+        split='val',
+        data_root='data/ScanNet200',
+        transform=[
+            dict(type='CenterShift', apply_z=True),
+            dict(type='NormalizeColor')
+        ],
+        test_mode=True,
+        test_cfg=dict(
+            voxelize=dict(
+                type='GridSample',
+                grid_size=0.02,
+                hash_type='fnv',
+                mode='test',
+                keys=('coord', 'color', 'normal'),
+                return_grid_coord=True),
+            crop=None,
+            post_transform=[
+                dict(type='CenterShift', apply_z=False),
+                dict(type='ToTensor'),
+                dict(
+                    type='Collect',
+                    keys=('coord', 'grid_coord', 'index', 'color'),
+                    feat_keys=('color', 'normal'))
+            ],
+            aug_transform=[[{
+                'type': 'RandomRotateTargetAngle',
+                'angle': [0],
+                'axis': 'z',
+                'center': [0, 0, 0],
+                'p': 1
+            }]])))
+num_worker_per_gpu = 7
+batch_size_per_gpu = 6
+batch_size_val_per_gpu = 1
+batch_size_test_per_gpu = 1
+
+[2025-07-08 23:12:58,795 INFO train.py line 149 1940757] => Building model ...
+[2025-07-08 23:12:59,057 INFO train.py line 465 1940757] Num params: 46169932
+[2025-07-08 23:12:59,091 INFO train.py line 151 1940757] => Building writer ...
+[2025-07-08 23:12:59,092 INFO train.py line 250 1940757] Tensorboard writer logging dir: ./exp/scannet200/my_result
+[2025-07-08 23:12:59,092 INFO train.py line 153 1940757] => Building train dataset & dataloader ...
+[2025-07-08 23:12:59,093 INFO defaults.py line 72 1940757] Totally 1201 x 1 samples in train set.
+[2025-07-08 23:12:59,093 INFO train.py line 155 1940757] => Building val dataset & dataloader ...
+[2025-07-08 23:12:59,093 INFO train.py line 157 1940757] => Building optimize, scheduler, scaler(amp) ...
+[2025-07-08 23:12:59,094 INFO optimizer.py line 54 1940757] Params Group 1 - lr: 0.001; Params: ['module.seg_head.weight', 'module.seg_head.bias', 'module.novel_seg_head.weight'].
+[2025-07-08 23:12:59,094 INFO optimizer.py line 54 1940757] Params Group 2 - lr: 0.0001; Params: ['module.backbone.embedding.stem.conv.weight', 'module.backbone.embedding.stem.norm.weight', 'module.backbone.embedding.stem.norm.bias', 'module.backbone.enc.enc0.block0.cpe.0.weight', 'module.backbone.enc.enc0.block0.cpe.0.bias', 'module.backbone.enc.enc0.block0.cpe.1.weight', 'module.backbone.enc.enc0.block0.cpe.1.bias', 'module.backbone.enc.enc0.block0.cpe.2.weight', 'module.backbone.enc.enc0.block0.cpe.2.bias', 'module.backbone.enc.enc0.block0.norm1.0.weight', 'module.backbone.enc.enc0.block0.norm1.0.bias', 'module.backbone.enc.enc0.block0.attn.qkv.weight', 'module.backbone.enc.enc0.block0.attn.qkv.bias', 'module.backbone.enc.enc0.block0.attn.proj.weight', 'module.backbone.enc.enc0.block0.attn.proj.bias', 'module.backbone.enc.enc0.block0.norm2.0.weight', 'module.backbone.enc.enc0.block0.norm2.0.bias', 'module.backbone.enc.enc0.block0.mlp.0.fc1.weight', 'module.backbone.enc.enc0.block0.mlp.0.fc1.bias', 'module.backbone.enc.enc0.block0.mlp.0.fc2.weight', 'module.backbone.enc.enc0.block0.mlp.0.fc2.bias', 'module.backbone.enc.enc0.block1.cpe.0.weight', 'module.backbone.enc.enc0.block1.cpe.0.bias', 'module.backbone.enc.enc0.block1.cpe.1.weight', 'module.backbone.enc.enc0.block1.cpe.1.bias', 'module.backbone.enc.enc0.block1.cpe.2.weight', 'module.backbone.enc.enc0.block1.cpe.2.bias', 'module.backbone.enc.enc0.block1.norm1.0.weight', 'module.backbone.enc.enc0.block1.norm1.0.bias', 'module.backbone.enc.enc0.block1.attn.qkv.weight', 'module.backbone.enc.enc0.block1.attn.qkv.bias', 'module.backbone.enc.enc0.block1.attn.proj.weight', 'module.backbone.enc.enc0.block1.attn.proj.bias', 'module.backbone.enc.enc0.block1.norm2.0.weight', 'module.backbone.enc.enc0.block1.norm2.0.bias', 'module.backbone.enc.enc0.block1.mlp.0.fc1.weight', 'module.backbone.enc.enc0.block1.mlp.0.fc1.bias', 'module.backbone.enc.enc0.block1.mlp.0.fc2.weight', 'module.backbone.enc.enc0.block1.mlp.0.fc2.bias', 'module.backbone.enc.enc1.down.proj.weight', 'module.backbone.enc.enc1.down.proj.bias', 'module.backbone.enc.enc1.down.norm.0.weight', 'module.backbone.enc.enc1.down.norm.0.bias', 'module.backbone.enc.enc1.block0.cpe.0.weight', 'module.backbone.enc.enc1.block0.cpe.0.bias', 'module.backbone.enc.enc1.block0.cpe.1.weight', 'module.backbone.enc.enc1.block0.cpe.1.bias', 'module.backbone.enc.enc1.block0.cpe.2.weight', 'module.backbone.enc.enc1.block0.cpe.2.bias', 'module.backbone.enc.enc1.block0.norm1.0.weight', 'module.backbone.enc.enc1.block0.norm1.0.bias', 'module.backbone.enc.enc1.block0.attn.qkv.weight', 'module.backbone.enc.enc1.block0.attn.qkv.bias', 'module.backbone.enc.enc1.block0.attn.proj.weight', 'module.backbone.enc.enc1.block0.attn.proj.bias', 'module.backbone.enc.enc1.block0.norm2.0.weight', 'module.backbone.enc.enc1.block0.norm2.0.bias', 'module.backbone.enc.enc1.block0.mlp.0.fc1.weight', 'module.backbone.enc.enc1.block0.mlp.0.fc1.bias', 'module.backbone.enc.enc1.block0.mlp.0.fc2.weight', 'module.backbone.enc.enc1.block0.mlp.0.fc2.bias', 'module.backbone.enc.enc1.block1.cpe.0.weight', 'module.backbone.enc.enc1.block1.cpe.0.bias', 'module.backbone.enc.enc1.block1.cpe.1.weight', 'module.backbone.enc.enc1.block1.cpe.1.bias', 'module.backbone.enc.enc1.block1.cpe.2.weight', 'module.backbone.enc.enc1.block1.cpe.2.bias', 'module.backbone.enc.enc1.block1.norm1.0.weight', 'module.backbone.enc.enc1.block1.norm1.0.bias', 'module.backbone.enc.enc1.block1.attn.qkv.weight', 'module.backbone.enc.enc1.block1.attn.qkv.bias', 'module.backbone.enc.enc1.block1.attn.proj.weight', 'module.backbone.enc.enc1.block1.attn.proj.bias', 'module.backbone.enc.enc1.block1.norm2.0.weight', 'module.backbone.enc.enc1.block1.norm2.0.bias', 'module.backbone.enc.enc1.block1.mlp.0.fc1.weight', 'module.backbone.enc.enc1.block1.mlp.0.fc1.bias', 'module.backbone.enc.enc1.block1.mlp.0.fc2.weight', 'module.backbone.enc.enc1.block1.mlp.0.fc2.bias', 'module.backbone.enc.enc2.down.proj.weight', 'module.backbone.enc.enc2.down.proj.bias', 'module.backbone.enc.enc2.down.norm.0.weight', 'module.backbone.enc.enc2.down.norm.0.bias', 'module.backbone.enc.enc2.block0.cpe.0.weight', 'module.backbone.enc.enc2.block0.cpe.0.bias', 'module.backbone.enc.enc2.block0.cpe.1.weight', 'module.backbone.enc.enc2.block0.cpe.1.bias', 'module.backbone.enc.enc2.block0.cpe.2.weight', 'module.backbone.enc.enc2.block0.cpe.2.bias', 'module.backbone.enc.enc2.block0.norm1.0.weight', 'module.backbone.enc.enc2.block0.norm1.0.bias', 'module.backbone.enc.enc2.block0.attn.qkv.weight', 'module.backbone.enc.enc2.block0.attn.qkv.bias', 'module.backbone.enc.enc2.block0.attn.proj.weight', 'module.backbone.enc.enc2.block0.attn.proj.bias', 'module.backbone.enc.enc2.block0.norm2.0.weight', 'module.backbone.enc.enc2.block0.norm2.0.bias', 'module.backbone.enc.enc2.block0.mlp.0.fc1.weight', 'module.backbone.enc.enc2.block0.mlp.0.fc1.bias', 'module.backbone.enc.enc2.block0.mlp.0.fc2.weight', 'module.backbone.enc.enc2.block0.mlp.0.fc2.bias', 'module.backbone.enc.enc2.block1.cpe.0.weight', 'module.backbone.enc.enc2.block1.cpe.0.bias', 'module.backbone.enc.enc2.block1.cpe.1.weight', 'module.backbone.enc.enc2.block1.cpe.1.bias', 'module.backbone.enc.enc2.block1.cpe.2.weight', 'module.backbone.enc.enc2.block1.cpe.2.bias', 'module.backbone.enc.enc2.block1.norm1.0.weight', 'module.backbone.enc.enc2.block1.norm1.0.bias', 'module.backbone.enc.enc2.block1.attn.qkv.weight', 'module.backbone.enc.enc2.block1.attn.qkv.bias', 'module.backbone.enc.enc2.block1.attn.proj.weight', 'module.backbone.enc.enc2.block1.attn.proj.bias', 'module.backbone.enc.enc2.block1.norm2.0.weight', 'module.backbone.enc.enc2.block1.norm2.0.bias', 'module.backbone.enc.enc2.block1.mlp.0.fc1.weight', 'module.backbone.enc.enc2.block1.mlp.0.fc1.bias', 'module.backbone.enc.enc2.block1.mlp.0.fc2.weight', 'module.backbone.enc.enc2.block1.mlp.0.fc2.bias', 'module.backbone.enc.enc3.down.proj.weight', 'module.backbone.enc.enc3.down.proj.bias', 'module.backbone.enc.enc3.down.norm.0.weight', 'module.backbone.enc.enc3.down.norm.0.bias', 'module.backbone.enc.enc3.block0.cpe.0.weight', 'module.backbone.enc.enc3.block0.cpe.0.bias', 'module.backbone.enc.enc3.block0.cpe.1.weight', 'module.backbone.enc.enc3.block0.cpe.1.bias', 'module.backbone.enc.enc3.block0.cpe.2.weight', 'module.backbone.enc.enc3.block0.cpe.2.bias', 'module.backbone.enc.enc3.block0.norm1.0.weight', 'module.backbone.enc.enc3.block0.norm1.0.bias', 'module.backbone.enc.enc3.block0.attn.qkv.weight', 'module.backbone.enc.enc3.block0.attn.qkv.bias', 'module.backbone.enc.enc3.block0.attn.proj.weight', 'module.backbone.enc.enc3.block0.attn.proj.bias', 'module.backbone.enc.enc3.block0.norm2.0.weight', 'module.backbone.enc.enc3.block0.norm2.0.bias', 'module.backbone.enc.enc3.block0.mlp.0.fc1.weight', 'module.backbone.enc.enc3.block0.mlp.0.fc1.bias', 'module.backbone.enc.enc3.block0.mlp.0.fc2.weight', 'module.backbone.enc.enc3.block0.mlp.0.fc2.bias', 'module.backbone.enc.enc3.block1.cpe.0.weight', 'module.backbone.enc.enc3.block1.cpe.0.bias', 'module.backbone.enc.enc3.block1.cpe.1.weight', 'module.backbone.enc.enc3.block1.cpe.1.bias', 'module.backbone.enc.enc3.block1.cpe.2.weight', 'module.backbone.enc.enc3.block1.cpe.2.bias', 'module.backbone.enc.enc3.block1.norm1.0.weight', 'module.backbone.enc.enc3.block1.norm1.0.bias', 'module.backbone.enc.enc3.block1.attn.qkv.weight', 'module.backbone.enc.enc3.block1.attn.qkv.bias', 'module.backbone.enc.enc3.block1.attn.proj.weight', 'module.backbone.enc.enc3.block1.attn.proj.bias', 'module.backbone.enc.enc3.block1.norm2.0.weight', 'module.backbone.enc.enc3.block1.norm2.0.bias', 'module.backbone.enc.enc3.block1.mlp.0.fc1.weight', 'module.backbone.enc.enc3.block1.mlp.0.fc1.bias', 'module.backbone.enc.enc3.block1.mlp.0.fc2.weight', 'module.backbone.enc.enc3.block1.mlp.0.fc2.bias', 'module.backbone.enc.enc3.block2.cpe.0.weight', 'module.backbone.enc.enc3.block2.cpe.0.bias', 'module.backbone.enc.enc3.block2.cpe.1.weight', 'module.backbone.enc.enc3.block2.cpe.1.bias', 'module.backbone.enc.enc3.block2.cpe.2.weight', 'module.backbone.enc.enc3.block2.cpe.2.bias', 'module.backbone.enc.enc3.block2.norm1.0.weight', 'module.backbone.enc.enc3.block2.norm1.0.bias', 'module.backbone.enc.enc3.block2.attn.qkv.weight', 'module.backbone.enc.enc3.block2.attn.qkv.bias', 'module.backbone.enc.enc3.block2.attn.proj.weight', 'module.backbone.enc.enc3.block2.attn.proj.bias', 'module.backbone.enc.enc3.block2.norm2.0.weight', 'module.backbone.enc.enc3.block2.norm2.0.bias', 'module.backbone.enc.enc3.block2.mlp.0.fc1.weight', 'module.backbone.enc.enc3.block2.mlp.0.fc1.bias', 'module.backbone.enc.enc3.block2.mlp.0.fc2.weight', 'module.backbone.enc.enc3.block2.mlp.0.fc2.bias', 'module.backbone.enc.enc3.block3.cpe.0.weight', 'module.backbone.enc.enc3.block3.cpe.0.bias', 'module.backbone.enc.enc3.block3.cpe.1.weight', 'module.backbone.enc.enc3.block3.cpe.1.bias', 'module.backbone.enc.enc3.block3.cpe.2.weight', 'module.backbone.enc.enc3.block3.cpe.2.bias', 'module.backbone.enc.enc3.block3.norm1.0.weight', 'module.backbone.enc.enc3.block3.norm1.0.bias', 'module.backbone.enc.enc3.block3.attn.qkv.weight', 'module.backbone.enc.enc3.block3.attn.qkv.bias', 'module.backbone.enc.enc3.block3.attn.proj.weight', 'module.backbone.enc.enc3.block3.attn.proj.bias', 'module.backbone.enc.enc3.block3.norm2.0.weight', 'module.backbone.enc.enc3.block3.norm2.0.bias', 'module.backbone.enc.enc3.block3.mlp.0.fc1.weight', 'module.backbone.enc.enc3.block3.mlp.0.fc1.bias', 'module.backbone.enc.enc3.block3.mlp.0.fc2.weight', 'module.backbone.enc.enc3.block3.mlp.0.fc2.bias', 'module.backbone.enc.enc3.block4.cpe.0.weight', 'module.backbone.enc.enc3.block4.cpe.0.bias', 'module.backbone.enc.enc3.block4.cpe.1.weight', 'module.backbone.enc.enc3.block4.cpe.1.bias', 'module.backbone.enc.enc3.block4.cpe.2.weight', 'module.backbone.enc.enc3.block4.cpe.2.bias', 'module.backbone.enc.enc3.block4.norm1.0.weight', 'module.backbone.enc.enc3.block4.norm1.0.bias', 'module.backbone.enc.enc3.block4.attn.qkv.weight', 'module.backbone.enc.enc3.block4.attn.qkv.bias', 'module.backbone.enc.enc3.block4.attn.proj.weight', 'module.backbone.enc.enc3.block4.attn.proj.bias', 'module.backbone.enc.enc3.block4.norm2.0.weight', 'module.backbone.enc.enc3.block4.norm2.0.bias', 'module.backbone.enc.enc3.block4.mlp.0.fc1.weight', 'module.backbone.enc.enc3.block4.mlp.0.fc1.bias', 'module.backbone.enc.enc3.block4.mlp.0.fc2.weight', 'module.backbone.enc.enc3.block4.mlp.0.fc2.bias', 'module.backbone.enc.enc3.block5.cpe.0.weight', 'module.backbone.enc.enc3.block5.cpe.0.bias', 'module.backbone.enc.enc3.block5.cpe.1.weight', 'module.backbone.enc.enc3.block5.cpe.1.bias', 'module.backbone.enc.enc3.block5.cpe.2.weight', 'module.backbone.enc.enc3.block5.cpe.2.bias', 'module.backbone.enc.enc3.block5.norm1.0.weight', 'module.backbone.enc.enc3.block5.norm1.0.bias', 'module.backbone.enc.enc3.block5.attn.qkv.weight', 'module.backbone.enc.enc3.block5.attn.qkv.bias', 'module.backbone.enc.enc3.block5.attn.proj.weight', 'module.backbone.enc.enc3.block5.attn.proj.bias', 'module.backbone.enc.enc3.block5.norm2.0.weight', 'module.backbone.enc.enc3.block5.norm2.0.bias', 'module.backbone.enc.enc3.block5.mlp.0.fc1.weight', 'module.backbone.enc.enc3.block5.mlp.0.fc1.bias', 'module.backbone.enc.enc3.block5.mlp.0.fc2.weight', 'module.backbone.enc.enc3.block5.mlp.0.fc2.bias', 'module.backbone.enc.enc4.down.proj.weight', 'module.backbone.enc.enc4.down.proj.bias', 'module.backbone.enc.enc4.down.norm.0.weight', 'module.backbone.enc.enc4.down.norm.0.bias', 'module.backbone.enc.enc4.block0.cpe.0.weight', 'module.backbone.enc.enc4.block0.cpe.0.bias', 'module.backbone.enc.enc4.block0.cpe.1.weight', 'module.backbone.enc.enc4.block0.cpe.1.bias', 'module.backbone.enc.enc4.block0.cpe.2.weight', 'module.backbone.enc.enc4.block0.cpe.2.bias', 'module.backbone.enc.enc4.block0.norm1.0.weight', 'module.backbone.enc.enc4.block0.norm1.0.bias', 'module.backbone.enc.enc4.block0.attn.qkv.weight', 'module.backbone.enc.enc4.block0.attn.qkv.bias', 'module.backbone.enc.enc4.block0.attn.proj.weight', 'module.backbone.enc.enc4.block0.attn.proj.bias', 'module.backbone.enc.enc4.block0.norm2.0.weight', 'module.backbone.enc.enc4.block0.norm2.0.bias', 'module.backbone.enc.enc4.block0.mlp.0.fc1.weight', 'module.backbone.enc.enc4.block0.mlp.0.fc1.bias', 'module.backbone.enc.enc4.block0.mlp.0.fc2.weight', 'module.backbone.enc.enc4.block0.mlp.0.fc2.bias', 'module.backbone.enc.enc4.block1.cpe.0.weight', 'module.backbone.enc.enc4.block1.cpe.0.bias', 'module.backbone.enc.enc4.block1.cpe.1.weight', 'module.backbone.enc.enc4.block1.cpe.1.bias', 'module.backbone.enc.enc4.block1.cpe.2.weight', 'module.backbone.enc.enc4.block1.cpe.2.bias', 'module.backbone.enc.enc4.block1.norm1.0.weight', 'module.backbone.enc.enc4.block1.norm1.0.bias', 'module.backbone.enc.enc4.block1.attn.qkv.weight', 'module.backbone.enc.enc4.block1.attn.qkv.bias', 'module.backbone.enc.enc4.block1.attn.proj.weight', 'module.backbone.enc.enc4.block1.attn.proj.bias', 'module.backbone.enc.enc4.block1.norm2.0.weight', 'module.backbone.enc.enc4.block1.norm2.0.bias', 'module.backbone.enc.enc4.block1.mlp.0.fc1.weight', 'module.backbone.enc.enc4.block1.mlp.0.fc1.bias', 'module.backbone.enc.enc4.block1.mlp.0.fc2.weight', 'module.backbone.enc.enc4.block1.mlp.0.fc2.bias', 'module.backbone.dec.dec3.up.proj.0.weight', 'module.backbone.dec.dec3.up.proj.0.bias', 'module.backbone.dec.dec3.up.proj.1.weight', 'module.backbone.dec.dec3.up.proj.1.bias', 'module.backbone.dec.dec3.up.proj_skip.0.weight', 'module.backbone.dec.dec3.up.proj_skip.0.bias', 'module.backbone.dec.dec3.up.proj_skip.1.weight', 'module.backbone.dec.dec3.up.proj_skip.1.bias', 'module.backbone.dec.dec3.block0.cpe.0.weight', 'module.backbone.dec.dec3.block0.cpe.0.bias', 'module.backbone.dec.dec3.block0.cpe.1.weight', 'module.backbone.dec.dec3.block0.cpe.1.bias', 'module.backbone.dec.dec3.block0.cpe.2.weight', 'module.backbone.dec.dec3.block0.cpe.2.bias', 'module.backbone.dec.dec3.block0.norm1.0.weight', 'module.backbone.dec.dec3.block0.norm1.0.bias', 'module.backbone.dec.dec3.block0.attn.qkv.weight', 'module.backbone.dec.dec3.block0.attn.qkv.bias', 'module.backbone.dec.dec3.block0.attn.proj.weight', 'module.backbone.dec.dec3.block0.attn.proj.bias', 'module.backbone.dec.dec3.block0.norm2.0.weight', 'module.backbone.dec.dec3.block0.norm2.0.bias', 'module.backbone.dec.dec3.block0.mlp.0.fc1.weight', 'module.backbone.dec.dec3.block0.mlp.0.fc1.bias', 'module.backbone.dec.dec3.block0.mlp.0.fc2.weight', 'module.backbone.dec.dec3.block0.mlp.0.fc2.bias', 'module.backbone.dec.dec3.block1.cpe.0.weight', 'module.backbone.dec.dec3.block1.cpe.0.bias', 'module.backbone.dec.dec3.block1.cpe.1.weight', 'module.backbone.dec.dec3.block1.cpe.1.bias', 'module.backbone.dec.dec3.block1.cpe.2.weight', 'module.backbone.dec.dec3.block1.cpe.2.bias', 'module.backbone.dec.dec3.block1.norm1.0.weight', 'module.backbone.dec.dec3.block1.norm1.0.bias', 'module.backbone.dec.dec3.block1.attn.qkv.weight', 'module.backbone.dec.dec3.block1.attn.qkv.bias', 'module.backbone.dec.dec3.block1.attn.proj.weight', 'module.backbone.dec.dec3.block1.attn.proj.bias', 'module.backbone.dec.dec3.block1.norm2.0.weight', 'module.backbone.dec.dec3.block1.norm2.0.bias', 'module.backbone.dec.dec3.block1.mlp.0.fc1.weight', 'module.backbone.dec.dec3.block1.mlp.0.fc1.bias', 'module.backbone.dec.dec3.block1.mlp.0.fc2.weight', 'module.backbone.dec.dec3.block1.mlp.0.fc2.bias', 'module.backbone.dec.dec2.up.proj.0.weight', 'module.backbone.dec.dec2.up.proj.0.bias', 'module.backbone.dec.dec2.up.proj.1.weight', 'module.backbone.dec.dec2.up.proj.1.bias', 'module.backbone.dec.dec2.up.proj_skip.0.weight', 'module.backbone.dec.dec2.up.proj_skip.0.bias', 'module.backbone.dec.dec2.up.proj_skip.1.weight', 'module.backbone.dec.dec2.up.proj_skip.1.bias', 'module.backbone.dec.dec2.block0.cpe.0.weight', 'module.backbone.dec.dec2.block0.cpe.0.bias', 'module.backbone.dec.dec2.block0.cpe.1.weight', 'module.backbone.dec.dec2.block0.cpe.1.bias', 'module.backbone.dec.dec2.block0.cpe.2.weight', 'module.backbone.dec.dec2.block0.cpe.2.bias', 'module.backbone.dec.dec2.block0.norm1.0.weight', 'module.backbone.dec.dec2.block0.norm1.0.bias', 'module.backbone.dec.dec2.block0.attn.qkv.weight', 'module.backbone.dec.dec2.block0.attn.qkv.bias', 'module.backbone.dec.dec2.block0.attn.proj.weight', 'module.backbone.dec.dec2.block0.attn.proj.bias', 'module.backbone.dec.dec2.block0.norm2.0.weight', 'module.backbone.dec.dec2.block0.norm2.0.bias', 'module.backbone.dec.dec2.block0.mlp.0.fc1.weight', 'module.backbone.dec.dec2.block0.mlp.0.fc1.bias', 'module.backbone.dec.dec2.block0.mlp.0.fc2.weight', 'module.backbone.dec.dec2.block0.mlp.0.fc2.bias', 'module.backbone.dec.dec2.block1.cpe.0.weight', 'module.backbone.dec.dec2.block1.cpe.0.bias', 'module.backbone.dec.dec2.block1.cpe.1.weight', 'module.backbone.dec.dec2.block1.cpe.1.bias', 'module.backbone.dec.dec2.block1.cpe.2.weight', 'module.backbone.dec.dec2.block1.cpe.2.bias', 'module.backbone.dec.dec2.block1.norm1.0.weight', 'module.backbone.dec.dec2.block1.norm1.0.bias', 'module.backbone.dec.dec2.block1.attn.qkv.weight', 'module.backbone.dec.dec2.block1.attn.qkv.bias', 'module.backbone.dec.dec2.block1.attn.proj.weight', 'module.backbone.dec.dec2.block1.attn.proj.bias', 'module.backbone.dec.dec2.block1.norm2.0.weight', 'module.backbone.dec.dec2.block1.norm2.0.bias', 'module.backbone.dec.dec2.block1.mlp.0.fc1.weight', 'module.backbone.dec.dec2.block1.mlp.0.fc1.bias', 'module.backbone.dec.dec2.block1.mlp.0.fc2.weight', 'module.backbone.dec.dec2.block1.mlp.0.fc2.bias', 'module.backbone.dec.dec1.up.proj.0.weight', 'module.backbone.dec.dec1.up.proj.0.bias', 'module.backbone.dec.dec1.up.proj.1.weight', 'module.backbone.dec.dec1.up.proj.1.bias', 'module.backbone.dec.dec1.up.proj_skip.0.weight', 'module.backbone.dec.dec1.up.proj_skip.0.bias', 'module.backbone.dec.dec1.up.proj_skip.1.weight', 'module.backbone.dec.dec1.up.proj_skip.1.bias', 'module.backbone.dec.dec1.block0.cpe.0.weight', 'module.backbone.dec.dec1.block0.cpe.0.bias', 'module.backbone.dec.dec1.block0.cpe.1.weight', 'module.backbone.dec.dec1.block0.cpe.1.bias', 'module.backbone.dec.dec1.block0.cpe.2.weight', 'module.backbone.dec.dec1.block0.cpe.2.bias', 'module.backbone.dec.dec1.block0.norm1.0.weight', 'module.backbone.dec.dec1.block0.norm1.0.bias', 'module.backbone.dec.dec1.block0.attn.qkv.weight', 'module.backbone.dec.dec1.block0.attn.qkv.bias', 'module.backbone.dec.dec1.block0.attn.proj.weight', 'module.backbone.dec.dec1.block0.attn.proj.bias', 'module.backbone.dec.dec1.block0.norm2.0.weight', 'module.backbone.dec.dec1.block0.norm2.0.bias', 'module.backbone.dec.dec1.block0.mlp.0.fc1.weight', 'module.backbone.dec.dec1.block0.mlp.0.fc1.bias', 'module.backbone.dec.dec1.block0.mlp.0.fc2.weight', 'module.backbone.dec.dec1.block0.mlp.0.fc2.bias', 'module.backbone.dec.dec1.block1.cpe.0.weight', 'module.backbone.dec.dec1.block1.cpe.0.bias', 'module.backbone.dec.dec1.block1.cpe.1.weight', 'module.backbone.dec.dec1.block1.cpe.1.bias', 'module.backbone.dec.dec1.block1.cpe.2.weight', 'module.backbone.dec.dec1.block1.cpe.2.bias', 'module.backbone.dec.dec1.block1.norm1.0.weight', 'module.backbone.dec.dec1.block1.norm1.0.bias', 'module.backbone.dec.dec1.block1.attn.qkv.weight', 'module.backbone.dec.dec1.block1.attn.qkv.bias', 'module.backbone.dec.dec1.block1.attn.proj.weight', 'module.backbone.dec.dec1.block1.attn.proj.bias', 'module.backbone.dec.dec1.block1.norm2.0.weight', 'module.backbone.dec.dec1.block1.norm2.0.bias', 'module.backbone.dec.dec1.block1.mlp.0.fc1.weight', 'module.backbone.dec.dec1.block1.mlp.0.fc1.bias', 'module.backbone.dec.dec1.block1.mlp.0.fc2.weight', 'module.backbone.dec.dec1.block1.mlp.0.fc2.bias', 'module.backbone.dec.dec0.up.proj.0.weight', 'module.backbone.dec.dec0.up.proj.0.bias', 'module.backbone.dec.dec0.up.proj.1.weight', 'module.backbone.dec.dec0.up.proj.1.bias', 'module.backbone.dec.dec0.up.proj_skip.0.weight', 'module.backbone.dec.dec0.up.proj_skip.0.bias', 'module.backbone.dec.dec0.up.proj_skip.1.weight', 'module.backbone.dec.dec0.up.proj_skip.1.bias', 'module.backbone.dec.dec0.block0.cpe.0.weight', 'module.backbone.dec.dec0.block0.cpe.0.bias', 'module.backbone.dec.dec0.block0.cpe.1.weight', 'module.backbone.dec.dec0.block0.cpe.1.bias', 'module.backbone.dec.dec0.block0.cpe.2.weight', 'module.backbone.dec.dec0.block0.cpe.2.bias', 'module.backbone.dec.dec0.block0.norm1.0.weight', 'module.backbone.dec.dec0.block0.norm1.0.bias', 'module.backbone.dec.dec0.block0.attn.qkv.weight', 'module.backbone.dec.dec0.block0.attn.qkv.bias', 'module.backbone.dec.dec0.block0.attn.proj.weight', 'module.backbone.dec.dec0.block0.attn.proj.bias', 'module.backbone.dec.dec0.block0.norm2.0.weight', 'module.backbone.dec.dec0.block0.norm2.0.bias', 'module.backbone.dec.dec0.block0.mlp.0.fc1.weight', 'module.backbone.dec.dec0.block0.mlp.0.fc1.bias', 'module.backbone.dec.dec0.block0.mlp.0.fc2.weight', 'module.backbone.dec.dec0.block0.mlp.0.fc2.bias', 'module.backbone.dec.dec0.block1.cpe.0.weight', 'module.backbone.dec.dec0.block1.cpe.0.bias', 'module.backbone.dec.dec0.block1.cpe.1.weight', 'module.backbone.dec.dec0.block1.cpe.1.bias', 'module.backbone.dec.dec0.block1.cpe.2.weight', 'module.backbone.dec.dec0.block1.cpe.2.bias', 'module.backbone.dec.dec0.block1.norm1.0.weight', 'module.backbone.dec.dec0.block1.norm1.0.bias', 'module.backbone.dec.dec0.block1.attn.qkv.weight', 'module.backbone.dec.dec0.block1.attn.qkv.bias', 'module.backbone.dec.dec0.block1.attn.proj.weight', 'module.backbone.dec.dec0.block1.attn.proj.bias', 'module.backbone.dec.dec0.block1.norm2.0.weight', 'module.backbone.dec.dec0.block1.norm2.0.bias', 'module.backbone.dec.dec0.block1.mlp.0.fc1.weight', 'module.backbone.dec.dec0.block1.mlp.0.fc1.bias', 'module.backbone.dec.dec0.block1.mlp.0.fc2.weight', 'module.backbone.dec.dec0.block1.mlp.0.fc2.bias'].
+[2025-07-08 23:12:59,095 INFO train.py line 161 1940757] => Building hooks ...
+100%|███████████████████████████████████████| 338M/338M [00:11<00:00, 30.0MiB/s]
+100%|███████████████████████████████████████| 338M/338M [00:11<00:00, 29.6MiB/s]
+[2025-07-08 23:13:15,194 INFO __init__.py line 91 1940757] => loaded text embedding from 'CLIP'
+[2025-07-08 23:13:15,571 INFO network_template.py line 247 1940757] ==> Loading parameters from checkpoint ./models/3d_vlm_weight/sparseunet32_636.pth to GPU
+[2025-07-08 23:13:16,194 INFO network_template.py line 260 1940757] ==> Checkpoint trained from version: pcseg+0.1.0+be9e2bb+pyceca594
+[2025-07-08 23:13:16,708 INFO network_template.py line 277 1940757] Not updated weight task_head.cls_head.weight: torch.Size([57, 512])
+[2025-07-08 23:13:16,708 INFO network_template.py line 282 1940757] ==> Done (loaded 407/408)
+[2025-07-08 23:13:16,737 INFO defaults.py line 72 1940757] Totally 1201 x 1 samples in train set.
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/vscode_workspace/GFS-VL/exp/scannet200/my_result/code/pointcept/models/PLA/pcseg/external_libs/softgroup_ops/ops/functions.py:176: UserWarning: The torch.cuda.*DtypeTensor constructors are no longer recommended. It's best to use methods such as torch.tensor(data, dtype=*, device='cuda') to create tensors. (Triggered internally at ../torch/csrc/tensor/python_tensor.cpp:83.)
+  output_feats = torch.cuda.FloatTensor(M, C).zero_()
+[2025-07-08 23:13:24,681 INFO defaults.py line 72 1940757] Totally 1201 x 1 samples in train set.
+[2025-07-08 23:13:24,681 INFO misc.py line 376 1940757] => Loading checkpoint & weight ...
+[2025-07-08 23:13:24,681 INFO misc.py line 380 1940757] Loading weight at: ./models/backbone_weights/scannet200/model_best.pth
+[2025-07-08 23:13:28,210 INFO misc.py line 387 1940757] Loading layer weights with keyword: , replace keyword with:
+[2025-07-08 23:13:28,221 WARNING misc.py line 408 1940757] Missing keys in weight: ['novel_seg_head.weight']
+[2025-07-08 23:13:28,222 WARNING misc.py line 411 1940757] Unexpected keys in weight: []
+[2025-07-08 23:13:28,222 INFO train.py line 539 1940757] >>>>>>>>>>>>>>>> Start Training >>>>>>>>>>>>>>>>
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/ruichao/miniconda3/envs/gfs_vl/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[2025-07-08 23:13:38,255 INFO train.py line 668 1940757] => Filtering class 30, similarity 0.46216881275177
+[2025-07-08 23:13:38,258 INFO train.py line 668 1940757] => Filtering class 32, similarity 0.5164775848388672
+[2025-07-08 23:13:38,260 INFO train.py line 668 1940757] => Filtering class 47, similarity 0.5529506206512451
+[2025-07-08 23:13:38,288 INFO train.py line 668 1940757] => Filtering class 20, similarity 0.5680650472640991
+[2025-07-08 23:13:38,299 INFO train.py line 668 1940757] => Filtering class 32, similarity 0.5553171634674072
+/home/ruichao/vscode_workspace/GFS-VL/exp/scannet200/my_result/code/pointcept/models/PLA/pcseg/external_libs/softgroup_ops/ops/functions.py:176: UserWarning: The torch.cuda.*DtypeTensor constructors are no longer recommended. It's best to use methods such as torch.tensor(data, dtype=*, device='cuda') to create tensors. (Triggered internally at ../torch/csrc/tensor/python_tensor.cpp:83.)
+  output_feats = torch.cuda.FloatTensor(M, C).zero_()
+[2025-07-08 23:13:48,654 INFO misc.py line 140 1940757] Train: [1/20][1/100] Data 9.147 (9.147) Batch 20.320 (20.320) Remain 11:16:58 loss: 3.5770 Lr: 0.00100
+[2025-07-08 23:13:49,020 INFO train.py line 668 1940757] => Filtering class 32, similarity 0.5742721557617188
+[2025-07-08 23:13:49,023 INFO train.py line 668 1940757] => Filtering class 19, similarity 0.5979804396629333
+[2025-07-08 23:13:49,023 INFO train.py line 668 1940757] => Filtering class 20, similarity 0.5255500078201294
+[2025-07-08 23:13:49,023 INFO train.py line 668 1940757] => Filtering class 22, similarity 0.5457294583320618
+[2025-07-08 23:13:49,024 INFO train.py line 668 1940757] => Filtering class 23, similarity 0.5623509883880615
+[2025-07-08 23:13:49,024 INFO train.py line 668 1940757] => Filtering class 32, similarity 0.5268255472183228
+[2025-07-08 23:13:49,045 INFO train.py line 668 1940757] => Filtering class 47, similarity 0.3247527480125427
+[2025-07-08 23:13:49,048 INFO train.py line 668 1940757] => Filtering class 22, similarity 0.4115971624851227
+[2025-07-08 23:13:49,048 INFO train.py line 668 1940757] => Filtering class 28, similarity 0.5978628396987915
+[2025-07-08 23:13:49,048 INFO train.py line 668 1940757] => Filtering class 33, similarity 0.5297455787658691
+[2025-07-08 23:13:49,048 INFO train.py line 668 1940757] => Filtering class 34, similarity 0.5931072235107422
+[2025-07-08 23:13:49,056 INFO train.py line 668 1940757] => Filtering class 32, similarity 0.49931401014328003
+[2025-07-08 23:13:49,541 INFO misc.py line 140 1940757] Train: [1/20][2/100] Data 0.001 (0.001) Batch 0.886 (0.886) Remain 00:29:30 loss: 2.6108 Lr: 0.00100
+[2025-07-08 23:13:49,834 INFO train.py line 668 1940757] => Filtering class 43, similarity 0.5436747670173645
+[2025-07-08 23:13:49,837 INFO train.py line 668 1940757] => Filtering class 14, similarity 0.5928815603256226
+[2025-07-08 23:13:49,838 INFO train.py line 668 1940757] => Filtering class 23, similarity 0.49360188841819763
+[2025-07-08 23:13:49,838 INFO train.py line 668 1940757] => Filtering class 32, similarity 0.5234445333480835
+[2025-07-08 23:13:49,838 INFO train.py line 668 1940757] => Filtering class 50, similarity 0.5896224975585938
+[2025-07-08 23:13:49,841 INFO train.py line 668 1940757] => Filtering class 14, similarity 0.5600804090499878
+[2025-07-08 23:13:49,841 INFO train.py line 668 1940757] => Filtering class 23, similarity 0.35651975870132446
+[2025-07-08 23:13:49,841 INFO train.py line 668 1940757] => Filtering class 32, similarity 0.5381422638893127
+[2025-07-08 23:13:49,841 INFO train.py line 668 1940757] => Filtering class 34, similarity 0.5916807651519775
+[2025-07-08 23:13:49,845 INFO train.py line 668 1940757] => Filtering class 36, similarity 0.5702598690986633
+[2025-07-08 23:13:49,848 INFO train.py line 668 1940757] => Filtering class 56, similarity 0.5323948264122009
