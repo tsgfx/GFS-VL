@@ -329,6 +329,7 @@ class Trainer(TrainerBase):
 
 
 @TRAINERS.register_module("GFS_VL_Trainer")
+@TRAINERS.register_module("GFS_VL_Trainer")
 class GFS_VL_Trainer(Trainer):
     """
     Trainer for generalized few-shot 3D point cloud segmentation.
@@ -623,6 +624,8 @@ class GFS_VL_Trainer(Trainer):
             torch.cuda.empty_cache()
         self.comm_info["model_output_dict"] = output_dict
 
+
+    # 伪标签挑选
     def pseudo_label_selection(
         self, all_pred_cloud, all_feat_cloud, offset, ps_thresh=0.6
     ):
@@ -630,37 +633,37 @@ class GFS_VL_Trainer(Trainer):
         Filter raw 3D VLM predictions based on prototype similarity.
 
         Args:
-            all_pred_cloud (Tensor): Raw 3D VLM predictions for all points.
-            all_feat_cloud (Tensor): Feature vectors for all points.
-            offset (list): Batch offsets indicating point indices.
-            ps_thresh (float): Cosine similarity threshold for filtering.
+            all_pred_cloud (Tensor): Raw 3D VLM predictions for all points. 包含所有点的原始3D预测标签的张量 N * 1
+            all_feat_cloud (Tensor): Feature vectors for all points. 包含所有点特征的张量 N * D
+            offset (list): Batch offsets indicating point indices. 表示批次的偏移量
+            ps_thresh (float): Cosine similarity threshold for filtering. 余弦相似度的阈值
 
         Returns:
             Tensor: Filtered 3D VLM predictions.
         """
-        filtered_preds = []
+        filtered_preds = [] # 用于存储每一批次处理后的预测结果
         # Process each batch using provided offsets
-        for start_idx, end_idx in zip([0] + offset[:-1], offset):
-            class_prototypes = {}
-            pred_cloud = all_pred_cloud[start_idx:end_idx].clone()
-            feat_cloud = all_feat_cloud[start_idx:end_idx].clone()
+        for start_idx, end_idx in zip([0] + offset[:-1], offset): # 可学习写法：将偏移量 offset 分成一对一对的起始和结束索引
+            class_prototypes = {} # 存储当前批次每个类别的原型
+            pred_cloud = all_pred_cloud[start_idx:end_idx].clone() # 当前批次的原始3D预测标签
+            feat_cloud = all_feat_cloud[start_idx:end_idx].clone() # 当前批次的点云特征
 
             # Calculate mean feature for each predicted class in the batch
-            for class_id in pred_cloud.unique():
-                class_mask = pred_cloud == class_id
+            for class_id in pred_cloud.unique(): # 遍历当前批次所有预测出的类别，计算所有类别（新类别和旧类别都有）的原型
+                class_mask = pred_cloud == class_id #
                 class_prototypes[class_id.item()] = feat_cloud[
                     class_mask
                 ].mean(dim=0)
 
-            # Filter predictions based on similarity with 3D VLM prototypes
+            # Filter predictions based on similarity with 3D VLM prototypes 计算新类别原型和旧类别原型的余弦相似度，看看新类别的原型和哪个类别相似度最高
             for class_id, proto in class_prototypes.items():
-                if class_id < self.cfg.data.num_bases:
+                if class_id < self.cfg.data.num_bases: # 如果类别属于base则直接忽略
                     # Ignore base classes
                     pred_cloud[pred_cloud == class_id] = -1
                 else:
                     novel_proto = self.vlm_novel_proto[
                         class_id - self.cfg.data.num_bases
-                    ]
+                    ] # 计算当前类的原型
                     similarity = torch.cosine_similarity(
                         proto, novel_proto, dim=0
                     )
@@ -668,35 +671,36 @@ class GFS_VL_Trainer(Trainer):
                         self.logger.info(
                             f"=> Filtering class {class_id}, similarity {similarity}"
                         )
-                        pred_cloud[pred_cloud == class_id] = -1
+                        pred_cloud[pred_cloud == class_id] = -1 # 如果相似度低，就认为预测的伪标签不可信
 
             filtered_preds.append(pred_cloud)
 
-        return torch.cat(filtered_preds, dim=0)
+        return torch.cat(filtered_preds, dim=0) # 返回的就是可信度高的伪标签
 
     @torch.no_grad()
     def target_calibrate(self, input_dict):
         """
         Calibrate the segmentation target labels using 3D VLM and few-shot data.
         """
-        data_dict = self.construct_3D_vlm_input(input_dict)
-        ret_dict = self.VLM_3D(data_dict)
+        data_dict = self.construct_3D_vlm_input(input_dict) # 转换为适合3D VLM处理的格式
+        ret_dict = self.VLM_3D(data_dict) # 将数据传递给3D VLM模型进行预测
 
-        label = input_dict["segment"].clone()
+        label = input_dict["segment"].clone() # 输入数据中的分割标签（即每个点的类别标签）
         bg_label_mask = label == -1  # Default background label
 
-        prediction = ret_dict["seg_preds"].clone()
+        prediction = ret_dict["seg_preds"].clone() # 基于3D VLM模型生成的伪标签
         # Filter predictions using prototype similarity
         prediction = self.pseudo_label_selection(
             prediction,
             ret_dict["all_feats"],
             input_dict["offset"].tolist(),
             ps_thresh=self.cfg.ps_thresh,
-        )
+        ) # 伪标签过滤，返回新类别的标签
 
+        # 回填策略
         # Adaptive Infilling to further refine the pseudo-labels
         offset = input_dict["offset"].tolist()
-        new_predictions = []
+        new_predictions = [] # 用于存储每个批次经过回填策略后的预测标签
         # Process each batch of points
         for start_idx, end_idx in zip([0] + offset[:-1], offset):
             current_prototypes = {}
@@ -711,10 +715,10 @@ class GFS_VL_Trainer(Trainer):
                 noda_mask = input_dict["mask"][start_idx:end_idx].clone()
 
             # Compute prototypes for each novel class present in the background region
-            for class_id in bg_pred_cloud.unique():
+            for class_id in bg_pred_cloud.unique(): # 计算背景区域类别的原型
                 if class_id < 0:
                     continue
-                assert class_id >= self.cfg.data.num_bases
+                assert class_id >= self.cfg.data.num_bases # 确保我们处理的是新类别，而不是基础类别
                 class_features = bg_feat_cloud[bg_pred_cloud == class_id]
                 current_prototypes[class_id.item()] = class_features.mean(
                     dim=0
@@ -722,13 +726,13 @@ class GFS_VL_Trainer(Trainer):
 
             updated_prototypes = []
             updated_class_ids = []
-            # Prepare updated prototypes for all novel classes
+            # Prepare updated prototypes for all novel classes # 看看与当前背景原型形似度高的原型是新类中的哪一个
             for class_id in range(
                 self.cfg.data.num_bases, self.cfg.data.num_base_novels
             ):
-                if class_id in current_prototypes:
+                if class_id in current_prototypes: # 如果该类别已经有了从背景区域计算出的原型（current_prototypes[class_id]），则使用它
                     updated_prototypes.append(current_prototypes[class_id])
-                else:
+                else: # 如果该类别没有原型（即在当前背景区域中没有足够的点），则使用 预训练的 3D VLM 原型 (vlm_novel_proto) 作为该类别的原型
                     updated_prototypes.append(
                         self.vlm_novel_proto[
                             class_id - self.cfg.data.num_bases
@@ -737,6 +741,7 @@ class GFS_VL_Trainer(Trainer):
                 updated_class_ids.append(class_id)
             updated_prototypes = torch.stack(updated_prototypes)
 
+            # 找出那些 尚未被分配标签（-1）的点，包括背景和在伪标签选择中被过滤的
             # Identify points with unassigned labels (-1) for refinement
             if "mask" in input_dict:
                 mask_neg_one = (
@@ -746,12 +751,14 @@ class GFS_VL_Trainer(Trainer):
                 mask_neg_one = (pred_cloud == -1) & (cur_label == -1)
             feat_neg_one = feat_cloud[mask_neg_one]
 
+            # 计算未标记点的特征与所有新类别原型之间的余弦相似度，从而判断该点与哪个类别原型最相似
             # Compute cosine similarity between these features and the updated prototypes
             similarities = torch.cosine_similarity(
-                feat_neg_one[:, None, :],
-                updated_prototypes[None, :, :],
+                feat_neg_one[:, None, :], # [N, 1, D]
+                updated_prototypes[None, :, :], # [1, C, D]
                 dim=-1,
             )
+            # 如果相似度高于阈值，则为这些点分配标签，否则保持 -1
             max_similarity, max_class_idx = similarities.max(dim=1)
             refined_labels = pred_cloud.clone()
             refined_labels[mask_neg_one] = torch.where(
@@ -761,8 +768,9 @@ class GFS_VL_Trainer(Trainer):
                 ],
                 -1,  # Retain -1 if below threshold
             )
-            new_predictions.append(refined_labels)
+            new_predictions.append(refined_labels) #  将更新后的预测标签添加到 new_predictions 列表中
 
+        # 合并所有批次的预测
         # Merge predictions from all batches and update background regions in the original label
         prediction = torch.cat(new_predictions, dim=0)
         label_one_hot = label.clone()

@@ -111,7 +111,7 @@ class ScanNetDataset(DefaultDataset):
             data_dict["sampled_index"] = sampled_index
         return data_dict
 
-
+# 重新定义了 class2id，即类别到索引的映射，以支持200类标签
 @DATASETS.register_module()
 class ScanNet200Dataset(ScanNetDataset):
     VALID_ASSETS = [
@@ -123,7 +123,7 @@ class ScanNet200Dataset(ScanNetDataset):
     ]
     class2id = np.array(VALID_CLASS_IDS_200)
 
-
+# 用于支持 generalized few-shot segmentation (GFS)，并对 segment200 数据进行处理
 @DATASETS.register_module()
 class ScanNet200Dataset_GFS(ScanNetDataset):
     """
@@ -137,10 +137,11 @@ class ScanNet200Dataset_GFS(ScanNetDataset):
         super().__init__(**kwargs)
         self.bg_label = -1
         # Initialize lookup array (to be updated by child classes)
+        # 将 segment200 中的标签转换为 GFS 的统一标签（novel 和 base 的标签合并映射）
         self.lookup_array = np.full(
             len(CLASS_LABELS_200), self.bg_label, dtype=np.int32
         )
-
+    # 将 segment200 数据转换为 统一标签，即将200个类别的标签映射为模型需要的标签。
     def convert_index(self, seg_array):
         """Convert segmentation array from 200-class labels to unified labels."""
         converted = np.full(seg_array.shape, self.bg_label)
@@ -280,43 +281,43 @@ class ScanNet200Dataset_REGISTrain(ScanNet200Dataset_BASETrain):
         Augment the training point cloud by inserting novel instance patches.
         Returns augmented data and a mask indicating original (1) vs. novel (0) points.
         """
-        train_min = np.min(coords, axis=0)
-        train_z_min = train_min[2]
+        train_min = np.min(coords, axis=0) # 计算训练点云的最小坐标（在每个维度上）
+        train_z_min = train_min[2] # 获取训练数据中Z轴（高度）上的最小值，用于对新类别样本进行Z轴对齐。
 
         # Initialize augmented data with original training points
-        aug_coords = coords
-        aug_features = features
-        aug_normals = normals
-        aug_labels = labels
+        aug_coords = coords # N * 3 点云坐标
+        aug_features = features # 点云特征信息
+        aug_normals = normals # 点云的法线信息
+        aug_labels = labels # 点云的标签
         orig_mask = np.ones(
             coords.shape[0], dtype=np.int32
-        )  # 1 indicates original training points
+        )  # 1 indicates original training points 初始化全1的掩码，大小为点云的数量，用于标记原始数据中的点，通过更新这个掩码来区分原始点和新点
 
         # Define available scene edge options for placement
-        edges = ["bottom", "right", "top", "left"]
+        edges = ["bottom", "right", "top", "left"]  # 新类别样本放置的四条边
 
         for sample in novel_samples:
             samp_coords = sample["coord"]
             samp_features = sample["color"]
             samp_normals = sample["normal"]
 
-            # Determine patch dimensions from the novel sample
+            # Determine patch dimensions from the novel sample 计算新样本在x, y轴上的中点
             x_size = np.max(samp_coords[:, 0]) - np.min(samp_coords[:, 0])
             y_size = np.max(samp_coords[:, 1]) - np.min(samp_coords[:, 1])
             half_x = x_size / 2
             half_y = y_size / 2
 
-            # Compute center based on target foreground points where segment == 1
+            # Compute center based on target foreground points where segment == 1 计算中心
             target = samp_coords[sample["segment"] == 1]
             x_center = (np.max(target[:, 0]) + np.min(target[:, 0])) / 2
             y_center = (np.max(target[:, 1]) + np.min(target[:, 1])) / 2
 
-            # Create a square mask around the computed center
+            # Create a square mask around the computed center 生成方形掩码
             mask_x = np.abs(samp_coords[:, 0] - x_center) <= half_x / 2
             mask_y = np.abs(samp_coords[:, 1] - y_center) <= half_y / 2
             square_mask = mask_x & mask_y
 
-            # If too few points are selected, pick a random target point as new center
+            # If too few points are selected, pick a random target point as new center 判断覆盖率是否>10%，否则以随机点为中心，重新生成掩码
             if np.sum(square_mask & (sample["segment"] == 1)) < 0.1 * np.sum(
                 sample["segment"] == 1
             ):
@@ -331,15 +332,15 @@ class ScanNet200Dataset_REGISTrain(ScanNet200Dataset_BASETrain):
                 mask_y = np.abs(samp_coords[:, 1] - y_center) <= half_y / 2
                 square_mask = mask_x & mask_y
 
-            # Extract the patch from the novel sample
+            # Extract the patch from the novel sample 使用掩码在新类样本中提取新类
             patch_coords = samp_coords[square_mask]
             patch_features = samp_features[square_mask]
             patch_normals = samp_normals[square_mask]
             patch_labels = sample["segment"][square_mask]
-            # Assign the novel class label to patch points (1 -> class_id; else background)
+            # Assign the novel class label to patch points (1 -> class_id; else background) 如果是物体设置为类ID，如果是背景，设置为-1
             patch_labels = np.where(patch_labels == 1, sample["class_id"], -1)
 
-            # Randomly select an edge and compute translation vector
+            # Randomly select an edge and compute translation vector 随机选择边缘，然后根据该边缘的位置计算新类别样本平移的方向和距离
             sel_edge = random.choice(edges)
             edges.remove(sel_edge)
             if sel_edge == "bottom":
@@ -363,26 +364,27 @@ class ScanNet200Dataset_REGISTrain(ScanNet200Dataset_BASETrain):
                     np.argmax(patch_coords[:, 0])
                 ]  # Rightmost
 
+            # 计算平移
             translation = [
                 base_point[0] - inst_point[0],
                 base_point[1] - inst_point[1],
                 0,
             ]
 
-            # Translate patch and adjust z-coordinate to align with scene floor
+            # Translate patch and adjust z-coordinate to align with scene floor 与z轴对齐
             translated_patch = patch_coords + translation
             translated_patch[:, 2] += train_z_min - np.min(
                 translated_patch[:, 2]
             )
 
-            # Append the translated patch to the augmented cloud
+            # Append the translated patch to the augmented cloud 将新类别样本添加到增强后的数据
             aug_coords = np.vstack((aug_coords, translated_patch))
             aug_features = np.vstack((aug_features, patch_features))
             aug_normals = np.vstack((aug_normals, patch_normals))
             aug_labels = np.concatenate((aug_labels, patch_labels))
             # For the augmented points, mark them with 0 in the original mask
             orig_mask = np.concatenate(
-                (orig_mask, np.zeros(len(translated_patch), dtype=np.int32))
+                (orig_mask, np.zeros(len(translated_patch), dtype=np.int32)) # 在原始掩码中为新类别样本标记为 0，表示它们是新添加的样本
             )
 
         return aug_coords, aug_features, aug_normals, aug_labels, orig_mask
