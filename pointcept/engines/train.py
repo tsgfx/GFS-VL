@@ -327,8 +327,6 @@ class Trainer(TrainerBase):
         scaler = torch.cuda.amp.GradScaler() if self.cfg.enable_amp else None
         return scaler
 
-
-@TRAINERS.register_module("GFS_VL_Trainer")
 @TRAINERS.register_module("GFS_VL_Trainer")
 class GFS_VL_Trainer(Trainer):
     """
